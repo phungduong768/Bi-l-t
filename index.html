@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Bi-a Bắn Đền</title>
+  <style>
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto;background:#0b0f14;color:#eaf2ff}
+    .wrap{max-width:720px;margin:0 auto;padding:16px}
+    h1{font-size:20px;margin:0 0 10px}
+    .card{background:#121a24;border-radius:14px;padding:12px;margin-bottom:12px}
+    input,button{border-radius:10px;border:1px solid #2a3445;background:#0f1622;color:#eaf2ff;padding:10px}
+    button{cursor:pointer}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .player{border-top:1px solid #263247;padding-top:8px;margin-top:8px}
+    .score{font-size:22px;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Bi-a Bắn Đền</h1>
+    <div class="card">
+      <div class="row">
+        <input id="name" placeholder="Tên người chơi"/>
+        <button onclick="add()">Thêm</button>
+      </div>
+    </div>
+    <div id="list"></div>
+  </div>
+
+<script>
+let players=[]
+function add(){
+  const n=document.getElementById('name').value.trim()
+  if(!n)return
+  players.push({name:n,score:0})
+  document.getElementById('name').value=''
+  render()
+}
+function change(i,d){
+  players[i].score+=d
+  render()
+}
+function render(){
+  const el=document.getElementById('list')
+  el.innerHTML=''
+  players.forEach((p,i)=>{
+    el.innerHTML+=`
+    <div class="card player">
+      <b>${p.name}</b>
+      <div class="score">${p.score}</div>
+      <div class="row">
+        <button onclick="change(${i},1)">+1</button>
+        <button onclick="change(${i},-1)">-1</button>
+      </div>
+    </div>`
+  })
+}
+</script>
+</body>
+</html>
