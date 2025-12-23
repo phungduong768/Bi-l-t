@@ -1,61 +1,155 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Bi-a Bắn Đền</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Bi-a Bắn Đền — Tính điểm</title>
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <style>
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto;background:#0b0f14;color:#eaf2ff}
-    .wrap{max-width:720px;margin:0 auto;padding:16px}
-    h1{font-size:20px;margin:0 0 10px}
-    .card{background:#121a24;border-radius:14px;padding:12px;margin-bottom:12px}
-    input,button{border-radius:10px;border:1px solid #2a3445;background:#0f1622;color:#eaf2ff;padding:10px}
-    button{cursor:pointer}
-    .row{display:flex;gap:8px;flex-wrap:wrap}
-    .player{border-top:1px solid #263247;padding-top:8px;margin-top:8px}
-    .score{font-size:22px;font-weight:700}
+    :root{
+      --bg:#0b0f14; --card:#121a24; --muted:#93a4b8; --txt:#eaf2ff;
+      --line:rgba(255,255,255,.08); --accent:#4aa3ff; --danger:#ff5a6a; --ok:#32d296;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+      background:linear-gradient(180deg,#0b0f14,#081018); color:var(--txt);
+    }
+    header{padding:18px 16px 10px}
+    h1{margin:0; font-size:18px}
+    .sub{color:var(--muted); font-size:12px; margin-top:6px}
+    .wrap{padding:12px 12px 40px; max-width:980px; margin:0 auto}
+    .grid{display:grid; gap:12px}
+    @media(min-width:880px){ .grid{grid-template-columns:1.2fr .8fr} }
+    .card{
+      background:rgba(18,26,36,.92); border:1px solid var(--line); border-radius:var(--radius);
+      padding:12px; box-shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    input, select, button, textarea{
+      border-radius:12px; border:1px solid var(--line);
+      background:rgba(255,255,255,.04); color:var(--txt);
+      padding:10px 12px; font-size:14px; outline:none;
+    }
+    input::placeholder{color:rgba(234,242,255,.35)}
+    button{cursor:pointer; background:rgba(74,163,255,.16); border-color:rgba(74,163,255,.35)}
+    button:hover{filter:brightness(1.05)}
+    .btn-danger{background:rgba(255,90,106,.14); border-color:rgba(255,90,106,.35)}
+    .btn-ok{background:rgba(50,210,150,.14); border-color:rgba(50,210,150,.35)}
+    .btn-ghost{background:transparent}
+    .pill{padding:6px 10px; border-radius:999px; border:1px solid var(--line); color:var(--muted); font-size:12px}
+    .players{display:grid; gap:10px}
+    .player{
+      border:1px solid var(--line); border-radius:14px; padding:10px;
+      background:rgba(255,255,255,.02);
+    }
+    .p-top{display:flex; justify-content:space-between; align-items:center; gap:10px}
+    .name{font-weight:700; font-size:15px}
+    .score{font-size:22px; font-weight:800}
+    .money{color:var(--muted); font-size:12px; margin-top:2px}
+    .controls{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .controls button{padding:10px 12px; min-width:48px}
+    .hist{margin-top:10px; border-top:1px solid var(--line); padding-top:10px}
+    .hist h3{margin:0 0 8px; font-size:13px; color:var(--muted)}
+    .log{
+      max-height:260px; overflow:auto; border:1px solid var(--line); border-radius:12px;
+      padding:8px; background:rgba(0,0,0,.18);
+    }
+    .log-item{padding:8px; border-bottom:1px dashed rgba(255,255,255,.10); font-size:13px}
+    .log-item:last-child{border-bottom:none}
+    .log-item b{color:#fff}
+    .right h2{margin:0 0 8px; font-size:14px; color:var(--muted)}
+    .small{font-size:12px; color:var(--muted)}
+    textarea{width:100%; min-height:150px; resize:vertical}
+    .toast{
+      position:fixed; left:50%; transform:translateX(-50%);
+      bottom:18px; background:rgba(0,0,0,.70); color:#fff;
+      padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.12);
+      display:none;
+    }
   </style>
 </head>
-<body>
-  <div class="wrap">
-    <h1>Bi-a Bắn Đền</h1>
-    <div class="card">
-      <div class="row">
-        <input id="name" placeholder="Tên người chơi"/>
-        <button onclick="add()">Thêm</button>
-      </div>
-    </div>
-    <div id="list"></div>
-  </div>
 
-<script>
-let players=[]
-function add(){
-  const n=document.getElementById('name').value.trim()
-  if(!n)return
-  players.push({name:n,score:0})
-  document.getElementById('name').value=''
-  render()
-}
-function change(i,d){
-  players[i].score+=d
-  render()
-}
-function render(){
-  const el=document.getElementById('list')
-  el.innerHTML=''
-  players.forEach((p,i)=>{
-    el.innerHTML+=`
-    <div class="card player">
-      <b>${p.name}</b>
-      <div class="score">${p.score}</div>
-      <div class="row">
-        <button onclick="change(${i},1)">+1</button>
-        <button onclick="change(${i},-1)">-1</button>
+<body>
+<header>
+  <h1>Bi-a Bắn Đền — Tính điểm</h1>
+  <div class="sub">Cộng/trừ điểm • Lịch sử theo người • Đổi điểm ra tiền • Undo • Reset • Xuất/nhập dữ liệu</div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+    <section class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div class="row">
+          <span class="pill" id="totalPlayers">0 người</span>
+          <span class="pill">Tổng điểm: <b id="totalPoints">0</b></span>
+          <span class="pill">Tổng tiền: <b id="totalMoney">0</b></span>
+        </div>
+        <div class="row">
+          <button class="btn-ghost" id="undoBtn">↩️ Undo</button>
+          <button class="btn-danger" id="resetBtn">🧹 Reset</button>
+        </div>
       </div>
-    </div>`
-  })
-}
-</script>
+
+      <hr style="border:none;border-top:1px solid var(--line); margin:12px 0;">
+
+      <div class="row">
+        <input id="newName" placeholder="Tên người chơi (vd: Dương, Huy...)" />
+        <button id="addPlayerBtn" class="btn-ok">➕ Thêm người</button>
+        <button id="addPresetBtn">⚡ Thêm nhanh (2 người)</button>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <label class="small">1 điểm =</label>
+        <input id="moneyPerPoint" type="number" inputmode="numeric" min="0" step="1000" style="width:160px" />
+        <select id="currency">
+          <option value="VND">VND</option>
+          <option value="THB">THB</option>
+          <option value="USD">USD</option>
+        </select>
+        <span class="small">(dùng để đổi điểm ra tiền)</span>
+      </div>
+
+      <div style="margin-top:12px" class="players" id="players"></div>
+    </section>
+
+    <aside class="card right">
+      <h2>Ghi chú nhanh</h2>
+      <div class="small">• Bạn có thể cộng/trừ theo bước ±1, ±2, ±5, ±10 hoặc nhập số tuỳ ý.<br>
+      • Lịch sử lưu theo từng người + thời gian.<br>
+      • Dữ liệu tự lưu trên máy (localStorage).</div>
+
+      <hr style="border:none;border-top:1px solid var(--line); margin:12px 0;">
+
+      <h2>Xuất / Nhập dữ liệu</h2>
+      <div class="row">
+        <button id="exportBtn">📤 Xuất JSON</button>
+        <button id="copyBtn">📋 Copy</button>
+        <button id="importBtn" class="btn-ok">📥 Nhập JSON</button>
+      </div>
+      <div style="margin-top:10px">
+        <textarea id="jsonBox" placeholder="Dữ liệu JSON sẽ hiện ở đây..."></textarea>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--line); margin:12px 0;">
+
+      <h2>Cài như app trên iPhone</h2>
+      <div class="small">
+        Cách 1 (khuyên dùng): mở link GitHub Pages → Share → “Add to Home Screen”.<br>
+        Cách 2: dùng file <b>.mobileconfig</b> (mình để mẫu ở dưới).
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
 </body>
 </html>
