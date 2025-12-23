@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>FullScreen</key><true/>
+      <key>IsRemovable</key><true/>
+      <key>Label</key><string>Bi-a Bắn Đền</string>
+      <key>Precomposed</key><true/>
+      <key>URL</key><string>YOUR_GITHUB_PAGES_URL</string>
+
+      <key>PayloadType</key><string>com.apple.webClip.managed</string>
+      <key>PayloadIdentifier</key><string>com.phungduong768.bida.webclip</string>
+      <key>PayloadUUID</key><string>8D7F0B5A-3E1D-4C5A-9C92-0D1B9A0A6D11</string>
+      <key>PayloadVersion</key><integer>1</integer>
+      <key>PayloadDisplayName</key><string>Bi-a Bắn Đền</string>
+      <key>PayloadDescription</key><string>Web Clip</string>
+    </dict>
+  </array>
+
+  <key>PayloadDisplayName</key><string>Bi-a Bắn Đền (WebClip)</string>
+  <key>PayloadIdentifier</key><string>com.phungduong768.bida.profile</string>
+  <key>PayloadRemovalDisallowed</key><false/>
+  <key>PayloadType</key><string>Configuration</string>
+  <key>PayloadUUID</key><string>2A18D2C8-0A3D-4E7A-8B0E-5A5B7B7E9A21</string>
+  <key>PayloadVersion</key><integer>1</integer>
+</dict>
+</plist>
